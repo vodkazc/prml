@@ -6,6 +6,7 @@
 import logging
 from struct import pack, unpack
 from ctypes import *
+import io
 
 
 class CommonFile(object):
@@ -94,6 +95,43 @@ class Trace(object):
         self.traceOffsetForDisp = 0
         self.logScale = 0
         # self.parseTraceHeader()
+
+    def extractcryptodata(self, cryptodatafile, samplename):
+        fcrypto = io.FileIO(cryptodatafile, 'wb+')
+        fsamle = io.FileIO(samplename, 'wb+')
+        self.traceFile.openfile('rb')
+
+        for index in range(0, self.traceNumber):
+            self.traceFile.seekfile(
+                self.headerLength + index * (self.titleSpace + self.cryptoDataLength + self.pointCount * self.sampleLength))
+            if self.titleSpace != 0:
+                traceTitle = self.traceFile.readstr(self.titleSpace).decode('utf-8')
+                # logging.debug('Trace %d title : %s' % (index, traceTitle))
+            if self.cryptoDataLength != 0:
+                #cryptoData = list(self.traceFile.readbyte(self.cryptoDataLength))
+                fcrypto.write(self.traceFile.readbyte(self.cryptoDataLength))
+                # logging.debug('CryptoData:' + str(cryptoData))
+            if self.pointCount != 0:
+                # if self.sampleCoding == 0:
+                bstr = self.traceFile.readbyte(self.sampleLength * self.pointCount)
+                fsamle.write(bstr)
+                    # if self.sampleLength == 1:
+                    #     samplePoint = unpack(str(self.pointCount) + 'B', bstr)
+                    # elif self.sampleLength == 2:
+                    #     samplePoint = unpack('<' + str(self.pointCount) + 'H', bstr)
+                    # elif self.sampleLength == 4:
+                    #     samplePoint = unpack('<' + str(self.pointCount) + 'I', bstr)
+                # else:
+                #     bstr = self.traceFile.readbyte(self.sampleLength * self.pointCount)
+                #     samplePoint = unpack('<' + str(self.pointCount) + 'f', bstr)
+            if index % 100 == 0:
+                print(index)
+        self.traceFile.closefile()
+        fcrypto.close()
+        fsamle.close()
+
+
+
 
     def readheaderdatalength(self):
         data_length = self.traceFile.readint(1)
@@ -233,7 +271,7 @@ class Trace(object):
         traceTitle = ''
         cryptoData = None
         self.traceFile.openfile('rb')
-        self.traceFile.seekfile(self.headerLength + index * (self.titleSpace + self.cryptoDataLength + self.pointCount))
+        self.traceFile.seekfile(self.headerLength + index * (self.titleSpace + self.cryptoDataLength + self.pointCount * 4))
         if self.titleSpace != 0:
             traceTitle = self.traceFile.readstr(self.titleSpace).decode('utf-8')
             logging.debug('Trace %d title : %s' % (index, traceTitle))
