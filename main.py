@@ -6,12 +6,41 @@ import numpy as np
 import myutil
 import aes128
 import matplotlib.pyplot as plt
+from scipy.stats.stats import pearsonr
 if __name__ == '__main__':
-    logging.basicConfig(filename='logger.log', level=logging.ERROR)
+    # logging.basicConfig(filename='logger.log', level=logging.ERROR)
     cryptoDataMatFileName = '../cryptoDataMat.npy'
     sampleFileName = '../sampleMat.npy'
     soutValueFileName = '../soutValueMat.npy'
-    cryptoDataMat = np.load(soutValueFileName)
+    soutHWFileName = '../soutHWMat.npy'
+    hwm = np.load(soutHWFileName)
+    # sam = np.load(sampleFileName, 'r')
+
+    result = np.zeros((1, 60), 'float32')
+    s0_sample = np.load('../s0_sample_60dim.npy')
+    # np.save('../s0_sample_raw.npy', s0_sample)
+    for i in range(60):
+        result[0, i] = pearsonr(hwm[0:9999, 0], s0_sample[0:9999, i])[0]
+
+    maxindex = np.argmax(result)
+    # s0_sample = s0_sample_raw[:, (maxindex - 30):(maxindex + 30)]
+    # np.save('../s0_sample_60dim.npy', s0_sample)
+    plt.figure(1)
+    plt.subplot(211)
+    plt.plot(s0_sample[0, :])
+
+    plt.subplot(212)
+    plt.plot(result[0, :])
+    plt.show()
+
+    print('finish')
+    # plt.figure(1)
+    # plt.subplot(211)
+    # plt.plot(sam[0, :])
+    #
+    # plt.subplot(212)
+    # plt.plot(result[0, :])
+    # plt.show()
     # hammingMat = np.zeros((1, 256), 'B')
     # mm = myutil.MyUtil()
     # for i in range(256):
