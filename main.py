@@ -8,32 +8,46 @@ import aes128
 import matplotlib.pyplot as plt
 from scipy.stats.stats import pearsonr
 if __name__ == '__main__':
+
+    carry = np.zeros((4, 10))
+    result = []
+    for a0 in range(256):
+        for a1 in range(256):
+            for b0 in range(256):
+                for b1 in range(256):
+                    a0b0 = a0 * b0
+                    a0b1 = a0 * b1
+                    a1b0 = a1 * b0
+                    a1b1 = a1 * b1
+                    np.right_shift()
+
+    print('hello')
     # logging.basicConfig(filename='logger.log', level=logging.ERROR)
-    cryptoDataMatFileName = '../cryptoDataMat.npy'
-    sampleFileName = '../sampleMat.npy'
-    soutValueFileName = '../soutValueMat.npy'
-    soutHWFileName = '../soutHWMat.npy'
-    hwm = np.load(soutHWFileName)
-    # sam = np.load(sampleFileName, 'r')
-
-    result = np.zeros((1, 60), 'float32')
-    s0_sample = np.load('../s0_sample_60dim.npy')
-    # np.save('../s0_sample_raw.npy', s0_sample)
-    for i in range(60):
-        result[0, i] = pearsonr(hwm[0:9999, 0], s0_sample[0:9999, i])[0]
-
-    maxindex = np.argmax(result)
-    # s0_sample = s0_sample_raw[:, (maxindex - 30):(maxindex + 30)]
-    # np.save('../s0_sample_60dim.npy', s0_sample)
-    plt.figure(1)
-    plt.subplot(211)
-    plt.plot(s0_sample[0, :])
-
-    plt.subplot(212)
-    plt.plot(result[0, :])
-    plt.show()
-
-    print('finish')
+    # cryptoDataMatFileName = '../cryptoDataMat.npy'
+    # sampleFileName = '../sampleMat.npy'
+    # soutValueFileName = '../soutValueMat.npy'
+    # soutHWFileName = '../soutHWMat.npy'
+    # hwm = np.load(soutHWFileName)
+    # # sam = np.load(sampleFileName, 'r')
+    #
+    # result = np.zeros((1, 60), 'float32')
+    # s0_sample = np.load('../s0_sample_60dim.npy')
+    # # np.save('../s0_sample_raw.npy', s0_sample)
+    # for i in range(60):
+    #     result[0, i] = pearsonr(hwm[0:9999, 0], s0_sample[0:9999, i])[0]
+    #
+    # maxindex = np.argmax(result)
+    # # s0_sample = s0_sample_raw[:, (maxindex - 30):(maxindex + 30)]
+    # # np.save('../s0_sample_60dim.npy', s0_sample)
+    # plt.figure(1)
+    # plt.subplot(211)
+    # plt.plot(s0_sample[0, :])
+    #
+    # plt.subplot(212)
+    # plt.plot(result[0, :])
+    # plt.show()
+    #
+    # print('finish')
     # plt.figure(1)
     # plt.subplot(211)
     # plt.plot(sam[0, :])
